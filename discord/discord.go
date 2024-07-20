@@ -84,11 +84,11 @@ func getStatusTotal(status []string) (int, error) {
 	for _, v := range status {
 		i, err := strconv.Atoi(v)
 		if err != nil {
-			return 0, errors.New(fmt.Sprintf("数字を入れてください: %s", v))
+			return 0, fmt.Errorf("数字を入れてください: %s", v)
 		}
 
 		if i > statusMax {
-			return 0, errors.New(fmt.Sprintf("ステータス上限超過: %s", v))
+			return 0, fmt.Errorf("ステータス上限超過: %s", v)
 		}
 		total += i
 	}
