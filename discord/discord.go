@@ -19,8 +19,9 @@ type ratingDetail struct {
 }
 
 const (
+	lastBouns = 30
 	statusLen = 3
-	statusMax = 3000
+	statusMax = 1800
 	targetMax = 30000
 )
 
@@ -90,7 +91,13 @@ func getStatusTotal(status []string) (int, error) {
 		if i > statusMax {
 			return 0, fmt.Errorf("ステータス上限超過: %s", v)
 		}
-		total += i
+
+		if i+lastBouns > statusMax {
+			total += statusMax
+		} else {
+			total += i + lastBouns
+		}
+
 	}
 
 	return total, nil
@@ -101,21 +108,20 @@ func calResultAndFormatOutput(total float64, target ...float64) string {
 	const (
 		base        = float64(1700) // 一位得点
 		statusRitao = 2.3           // ステータス倍率
-		lastBouns   = 90            // 最終一位ボーナス
 	)
 	// 各ランクの評価点
 	fixedTargets := []ratingDetail{
 		{
-			name:   "S   ",
+			name:   "SS\t",
+			target: 16000,
+		},
+		{
+			name:   "S+\t",
+			target: 14500,
+		},
+		{
+			name:   "S \t",
 			target: 13000,
-		},
-		{
-			name:   "A+ ",
-			target: 11500,
-		},
-		{
-			name:   "A   ",
-			target: 10000,
 		},
 	}
 
@@ -163,7 +169,7 @@ func calResultAndFormatOutput(total float64, target ...float64) string {
 	result += fmt.Sprintln("--------------------")
 
 	for _, t := range fixedTargets {
-		targetRating := t.target - base - (total+lastBouns)*statusRitao
+		targetRating := t.target - base - (total)*statusRitao
 		finalExamPoint := float64(0)
 		for _, ptRatio := range pointRatio {
 			intervalMaxRating := ptRatio.upperBound * ptRatio.rate / 100
