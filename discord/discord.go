@@ -104,7 +104,7 @@ func getStatusTotal(status []string) (int, error) {
 }
 
 func calResultAndFormatOutput(total float64, target ...float64) string {
-	result := fmt.Sprintf("ステータス総合: %.0f\n", total)
+	result := fmt.Sprintf("ステータス総合(最終試験後): %.0f\n", total)
 	const (
 		base        = float64(1700) // 一位得点
 		statusRitao = 2.3           // ステータス倍率
